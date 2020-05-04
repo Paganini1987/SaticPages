@@ -1,18 +1,29 @@
 <template>
 	<div class="container">
 		<div class="row">
-			<div class="col-md-6" v-for="(image, index) in images" :key="index">
-				<div class="card mb-3">
-					<img class="card-img-top" :src="image" alt="Card image cap">
-					<div class="card-body">
-						<h5 class="card-title">Card title</h5>
-						<p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
+			<div class="col-md-12 mb-3">
+				<h1>Записи блога</h1>
+			</div>
+			<div class="col-md-12 mb-4">
+				<div class="btn-group">
+					<button @click="showSort = !showSort" type="button" class="btn btn-secondary dropdown-toggle" :class="{ show: showSort }" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Сортировать
+					</button>
+					<div class="dropdown-menu" :class="{ show: showSort }">
+						<a class="dropdown-item" href="#">Сначала новые</a>
+						<a class="dropdown-item" href="#">Сначала старые</a>
 					</div>
 				</div>
 			</div>
-			<div class="col-md-12">
-				Lorem, ipsum dolor sit amet consectetur adipisicing elit. Molestiae officiis deleniti mollitia at magni quo excepturi asperiores cupiditate, ab illum suscipit reiciendis maxime magnam ipsa debitis ea necessitatibus distinctio itaque! Fugit, ad voluptas ex molestias rerum saepe et mollitia ratione amet voluptatibus repellat officiis nisi sapiente tenetur facere harum labore maiores, corrupti cumque dolorum eligendi delectus. Eaque, soluta odio. Praesentium, excepturi modi fugit optio enim voluptas aut eaque neque libero quis. Assumenda veritatis praesentium repellendus neque ullam ea quia. Quae ipsam a eaque, tempore dolores ex facere voluptatum ab eveniet voluptatibus blanditiis quod nobis nisi quidem. Quae repellat repellendus assumenda ab, autem obcaecati! Exercitationem, cum suscipit unde illo esse blanditiis rem non? Tenetur molestias eos quaerat aliquam consequatur sed? Hic dignissimos praesentium asperiores, optio nesciunt rem sequi provident omnis facilis repudiandae, labore, reiciendis vel ex voluptatem doloremque laborum quo repellendus earum totam. Soluta temporibus inventore molestias illo ratione, voluptatibus aut natus quia reprehenderit rerum nostrum, odit cumque distinctio expedita neque sunt aperiam ipsam id ex et. Animi architecto exercitationem molestias blanditiis nostrum aliquid perferendis dicta nisi labore cumque, necessitatibus laudantium? Vel alias animi earum doloribus quia facilis ducimus? Incidunt perferendis maxime laboriosam doloremque omnis id et. Velit optio rerum ut?
+			<div class="col-md-6 mb-2" v-for="(post, index) in posts" :key="index">
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">{{ post.title }}</h5>
+						<p class="card-text">{{ post.text }}</p>
+						<p class="card-text"><small class="text-muted">Добавлено {{ post.date | dateFormat }}</small></p>
+						<!-- <a href="#" class="btn btn-primary"  @click.prevent="openPost(post)">Go somewhere</a> -->
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -21,32 +32,40 @@
 <script>
 
 export default {
-	data() {
-
+	async fetch({store}) {
+		if (store.getters['posts/posts'].length === 0) {
+			await store.dispatch('posts/getPosts')
+		}
 	},
-	asyncData (context) {
-		// called every time before loading the component
-		// as the name said, it can be async
-		// Also, the returned object will be merged with your data object
-		return { 
-			images: [
-				'/images/1.jpg',
-				'/images/2.jpg'
-			]
-		 }
+	data() {
+		return {
+			showSort: false
+		}
 	},
 	head () {
 		return {
-			title: 'Главная страница',
+			title: 'Супер блог',
 			meta: [
 				// hid is used as unique identifier. Do not use `vmid` for it as it will not work
-				{ hid: 'description', name: 'description', content: 'My custom description' }
+				{ hid: 'description', name: 'description', content: 'Страниица записей блога' }
 			]
+		}
+	},
+	computed: {
+		posts() {
+			return this.$store.getters['posts/posts']
+		}
+	},
+	filters: {
+		dateFormat(val) {
+			return new Date(val).toLocaleDateString()
 		}
 	}
 }
 </script>
 
 <style>
-
+.card {
+	height: 100%;
+}
 </style>

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<navbar></navbar>
-		<nuxt class="mt-3" />
+		<nuxt class="mt-5" />
 	</div>
 </template>
 
