@@ -6,14 +6,20 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarNav">
 		<ul class="navbar-nav">
-			<li class="nav-item active">
+			<li class="nav-item">
 				<nuxt-link exact active-class="active" to="/" class="nav-link" href="#">Записи</nuxt-link>
 			</li>
-			<li class="nav-item active">
+			<li class="nav-item">
 				<nuxt-link active-class="active" to="/about" class="nav-link" href="#">О блоге</nuxt-link>
 			</li>
-			<li class="nav-item active">
+			<li v-if="hasToken" class="nav-item">
 				<nuxt-link active-class="active" to="/admin" class="nav-link" href="#">Добавить пост</nuxt-link>
+			</li>
+			<li v-if="hasToken" class="nav-item">
+				<a @click.prevent="logout" class="nav-link" href="#">Выйти</a>
+			</li>
+			<li v-else class="nav-item">
+				<nuxt-link active-class="active" to="/login" class="nav-link" href="#">Войти</nuxt-link>
 			</li>
 		</ul>
 		</div>
@@ -22,7 +28,18 @@
 
 <script>
 export default {
-	name: 'Navbar'
+	name: 'Navbar',
+	computed: {
+		hasToken() {
+			return this.$store.getters.hasToken
+		}
+	},
+	methods: {
+		logout() {
+			this.$store.dispatch('logout')
+			this.$router.push('/')
+		}
+	}
 }
 </script>
 

@@ -39,6 +39,7 @@ export default {
 			saving: false
 		}
 	},
+	middleware: ['auth'],
 	methods: {
 		submit () {
 			this.saving = true
